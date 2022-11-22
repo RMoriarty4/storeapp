@@ -1,0 +1,35 @@
+type ProductType
+  @model(subscriptions: null)
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admin"], operations: [create, update, delete] }
+      { allow: public, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  name: String!
+  products: [Product] @hasMany
+}
+
+type Product
+  @model(subscriptions: null)
+  @auth(
+    rules: [
+      { allow: groups, groups: ["Admin"], operations: [create, update, delete] }
+      { allow: public, operations: [read] }
+    ]
+  ) {
+  id: ID!
+  name: String!
+  price: Float!
+}
+
+type Query {
+  provideDiscount(price: Float!, age: Float!): PriceInfo
+    @function(name: "providediscount-${env}")
+}
+
+type PriceInfo {
+  discountAmount: Float!
+  discountedPrice: Float!
+}
